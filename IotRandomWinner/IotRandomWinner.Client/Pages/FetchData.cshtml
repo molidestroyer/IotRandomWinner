@@ -3,13 +3,13 @@
 
 @inject HttpClient Http
 
-<h1>Weather forecast</h1>
+<h1>Iot contest winner</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p>We are going to randomize the winner making appear the number of the winner over the MXChips.</p>
 
 @if (forecasts == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Loading devices...</em></p>
 
 }
 else
@@ -17,7 +17,7 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
+                <th>Device Id</th>
             </tr>
         </thead>
         <tbody>

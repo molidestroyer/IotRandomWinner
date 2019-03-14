@@ -2,6 +2,7 @@
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,7 +77,10 @@ namespace IotRandomWinner.Server.iot
         {
             try
             {
-                var response = await serviceClient.InvokeDeviceMethodAsync(deviceId.Id, new CloudToDeviceMethod(method));
+                var methodInvocation = new CloudToDeviceMethod(method) { ResponseTimeout = TimeSpan.FromSeconds(30) };
+                methodInvocation.SetPayloadJson(JsonConvert.SerializeObject(new Payload() { Name= "miguel"}));
+                var response = await serviceClient.InvokeDeviceMethodAsync(deviceId.Id, methodInvocation);
+
             } catch (Exception e)
             {
                 throw e;
@@ -176,5 +180,10 @@ namespace IotRandomWinner.Server.iot
             deviceList.Add(new DeviceEntity() { Id = "TestDevice05", PrimaryKey = "TestPrimKey05", SecondaryKey = "TestSecKey05" });
             return deviceList;
         }
+    }
+
+    public class Payload
+    {
+        public string Name { get; set; }
     }
 }
