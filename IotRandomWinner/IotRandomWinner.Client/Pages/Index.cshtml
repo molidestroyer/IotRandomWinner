@@ -3,48 +3,62 @@
 
 @inject HttpClient Http
 
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
+@if (devices == null)
 {
     <p><em>Loading...</em></p>
 
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Id</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <button class="btn btn-primary mt-2" onclick="@(async () => await CallRandomNumber())">Call random number</button>
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+        <div class="col-md-5 p-lg-5 mx-auto my-5">
+            <h1 class="display-4 font-weight-normal">ERNI EPD DRAW</h1>
+            <p class="lead font-weight-normal">Let's have some fun on the EPD giving to the assistants some prices randomly using the power of the cloud combined with IOT.</p>
+            <button class="btn btn-outline-secondary" onclick="@(async () => await CallRandomNumber())">Send winners to devices</button>
+        </div>
+        <div class="product-device shadow-sm d-none d-md-block">
+            <img src="https://i.pinimg.com/564x/16/12/18/161218e3e1795507f9e93825f111fff0.jpg" />
+        </div>
+        <div class="product-device product-device-2 shadow-sm d-none d-md-block">
+            <img src="https://i.pinimg.com/564x/16/12/18/161218e3e1795507f9e93825f111fff0.jpg" />
+        </div>
+    </div>
+
+    <div class="row" style="padding-top:10px">
+        <div class="col-md-4">
+            <select class="form-control" onchange="@WorkshopClicked">
+                <option value="">-- Select Country --</option>
+                @foreach (var workshop in workshopList)
+                {
+                    <option value="@workshop.Name">@workshop.Name</option>
+                }
+            </select>
+        </div>
+    </div>
 
 }
 
 @functions {
-    DeviceEntity[] forecasts;
+    DeviceEntity[] devices;
+    string workshopName { get; set; }
+    WorkshopList[] workshopList;
 
     protected override async Task OnInitAsync()
     {
-        forecasts = await Http.GetJsonAsync<DeviceEntity[]>("api/SampleData/WeatherForecasts");
+        devices = await Http.GetJsonAsync<DeviceEntity[]>("api/SampleData/GetDevices");
+        workshopList = await Http.GetJsonAsync<WorkshopList[]>("api/SampleData/GetWorkshops");
     }
 
     protected async Task CallRandomNumber()
     {
-        var request = new RandomItemRequest { DeviceId = new List<DeviceEntity> { forecasts.FirstOrDefault() }, Method = "generateRandomNumber" };
+        var request = new RandomItemRequest { Devices = devices , Method = "generateRandomNumber", Assistants= workshopList.FirstOrDefault(t=> t.Name == workshopName).Assitants };
         await Http.PostJsonAsync<RandomItemRequest>("api/SampleData/InvokeDeviceMethod", request);
 
+    }
+
+    void WorkshopClicked(UIChangeEventArgs cityEvent)
+    {
+        workshopName = cityEvent.Value.ToString();
+        this.StateHasChanged();
     }
 }

@@ -10,25 +10,28 @@
 #define MESSAGE_MAX_LEN 256
 
 static bool hasWifi = false;
+static bool hasWinner = false;
 
-static void generateRandomNumber(JsonObject& payloadBuffer)
+static void generateRandomNumber(JsonObject &payloadBuffer)
 {
   //generate a random number
   int randomNumber = random(1, 50);
 
   //display the random number on the serial monitor
-  Screen.print(1, "The xx Number is ..  ");
-  char cstr[16];
+  Screen.print(1, "Congratulations!  ", true);
+  delay(1000);
 
-  Screen.print(3, itoa(randomNumber, cstr, 10));
+  const char *yourstring = payloadBuffer["Name"];
+  Screen.print(1, yourstring);
+  Screen.print(3, "Enjoy!");
 }
 
 static JsonObject &parsePayload(const unsigned char *payload)
 {
   LogInfo("parsing payload\n");
   DynamicJsonBuffer dBuffer;
-  JsonObject& payloadBuffer = dBuffer.parseObject(payload);
-  const char* yourstring = payloadBuffer["Name"];
+  JsonObject &payloadBuffer = dBuffer.parseObject(payload);
+  const char *yourstring = payloadBuffer["Name"];
 
   LogInfo(yourstring);
 

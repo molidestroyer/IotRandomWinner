@@ -12,35 +12,38 @@
 
 
 static bool hasWifi = false;
+static bool hasWinner = false;
 
-static void generateRandomNumber(JsonObject& payloadBuffer)
+static void generateRandomNumber(JsonObject &payloadBuffer)
 {
   //generate a random number
   int randomNumber = random(1, 50);
 
   //display the random number on the serial monitor
-  Screen.print(1, "The xx Number is ..  ");
-  char cstr[16];
+  Screen.print(1, "Congratulations!  ", true);
+  delay(1000);
 
-  Screen.print(3, itoa(randomNumber, cstr, 10));
+  const char *yourstring = payloadBuffer["Name"];
+  Screen.print(1, yourstring);
+  Screen.print(3, "Enjoy!");
 }
 
 static JsonObject &parsePayload(const unsigned char *payload)
 {
   do{{ if (0) { (void)printf("parsing payload\n"); } { LOGGER_LOG l = xlogging_get_log_function(); if (l != 
-# 28 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino" 3 4
+# 31 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino" 3 4
  __null
-# 28 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
- ) l(AZ_LOG_INFO, "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino", __func__, 28, 0x01, "parsing payload\n"); } }; }while((void)0,0);
+# 31 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+ ) l(AZ_LOG_INFO, "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino", __func__, 31, 0x01, "parsing payload\n"); } }; }while((void)0,0);
   DynamicJsonBuffer dBuffer;
-  JsonObject& payloadBuffer = dBuffer.parseObject(payload);
+  JsonObject &payloadBuffer = dBuffer.parseObject(payload);
   const char *yourstring = payloadBuffer["Name"];
 
   do{{ if (0) { (void)printf(yourstring); } { LOGGER_LOG l = xlogging_get_log_function(); if (l != 
-# 33 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino" 3 4
+# 36 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino" 3 4
  __null
-# 33 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
- ) l(AZ_LOG_INFO, "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino", __func__, 33, 0x01, yourstring); } }; }while((void)0,0);
+# 36 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+ ) l(AZ_LOG_INFO, "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino", __func__, 36, 0x01, yourstring); } }; }while((void)0,0);
 
   return payloadBuffer;
 }
@@ -67,10 +70,10 @@ static int DeviceMethodCallback(const char *methodName, const unsigned char *pay
   int result = 200;
 
   do{{ if (0) { (void)printf("received device method call\n\n"); } { LOGGER_LOG l = xlogging_get_log_function(); if (l != 
-# 59 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino" 3 4
+# 62 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino" 3 4
  __null
-# 59 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
- ) l(AZ_LOG_INFO, "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino", __func__, 59, 0x01, "received device method call\n\n"); } }; }while((void)0,0);
+# 62 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+ ) l(AZ_LOG_INFO, "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino", __func__, 62, 0x01, "received device method call\n\n"); } }; }while((void)0,0);
 
   if (strcmp(methodName, "generateRandomNumber") == 0)
   {

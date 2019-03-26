@@ -73,12 +73,12 @@ namespace IotRandomWinner.Server.iot
         }
 
 
-        public async Task InvokeDeviceMethodAsync(DeviceEntity deviceId, string method)
+        public async Task InvokeDeviceMethodAsync(DeviceEntity deviceId, string method, Payload payload)
         {
             try
             {
                 var methodInvocation = new CloudToDeviceMethod(method) { ResponseTimeout = TimeSpan.FromSeconds(30) };
-                methodInvocation.SetPayloadJson(JsonConvert.SerializeObject(new Payload() { Name= "miguel"}));
+                methodInvocation.SetPayloadJson(JsonConvert.SerializeObject(payload));
                 var response = await serviceClient.InvokeDeviceMethodAsync(deviceId.Id, methodInvocation);
 
             } catch (Exception e)

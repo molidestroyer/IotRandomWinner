@@ -13,37 +13,40 @@
 #define MESSAGE_MAX_LEN 256
 
 static bool hasWifi = false;
+static bool hasWinner = false;
 
-#line 14 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
-static void generateRandomNumber(JsonObject& payloadBuffer);
-#line 26 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+#line 15 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+static void generateRandomNumber(JsonObject &payloadBuffer);
+#line 29 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
 static JsonObject& parsePayload(const unsigned char *payload);
-#line 38 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+#line 41 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
 static void InitWifi();
-#line 54 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+#line 57 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
 static int DeviceMethodCallback(const char *methodName, const unsigned char *payload, int size, unsigned char **response, int *response_size);
-#line 83 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+#line 86 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
 void setup();
-#line 100 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+#line 103 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
 void loop();
-#line 14 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
-static void generateRandomNumber(JsonObject& payloadBuffer)
+#line 15 "d:\\Repos\\GitHub\\IotRandomWinner\\Device\\RandomWinner\\Device\\device.ino"
+static void generateRandomNumber(JsonObject &payloadBuffer)
 {
   //generate a random number
   int randomNumber = random(1, 50);
 
   //display the random number on the serial monitor
-  Screen.print(1, "The xx Number is ..  ");
-  char cstr[16];
+  Screen.print(1, "Congratulations!  ", true);
+  delay(1000);
 
-  Screen.print(3, itoa(randomNumber, cstr, 10));
+  const char *yourstring = payloadBuffer["Name"];
+  Screen.print(1, yourstring);
+  Screen.print(3, "Enjoy!");
 }
 
 static JsonObject &parsePayload(const unsigned char *payload)
 {
   LogInfo("parsing payload\n");
   DynamicJsonBuffer dBuffer;
-  JsonObject& payloadBuffer = dBuffer.parseObject(payload);
+  JsonObject &payloadBuffer = dBuffer.parseObject(payload);
   const char *yourstring = payloadBuffer["Name"];
 
   LogInfo(yourstring);

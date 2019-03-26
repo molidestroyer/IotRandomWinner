@@ -21,18 +21,43 @@ namespace IotRandomWinner.Server.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<DeviceEntity> WeatherForecasts()
+        public IEnumerable<DeviceEntity> GetDevices()
         {
             var rng = new Random();
             var devices = this.devicesProcessor.GetDevices().Result;
             return devices;
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<WorkshopList> GetWorkshops()
+        {
+            var workshops = new List<WorkshopList>();
+            workshops.Add(new WorkshopList() {
+                Name= "iot the beginning",
+                Assitants = new List<string> { "Oscar vaquero viñes", "Miguel Molina", "Robert Cluet", "Manolete garcia perez", "David bustamante" }
+            }            );
+            workshops.Add(new WorkshopList()
+            {
+                Name = "iot 2 the return",
+                Assitants = new List<string> { "Oscar vaquero viñes2", "Miguel Molina2", "Robert Cluet2", "Manolete garcia perez2", "David bustamante2" }
+            });
+            workshops.Add(new WorkshopList()
+            {
+                Name = "iot 3 the dummy",
+                Assitants = new List<string> { "Oscar vaquero viñes3", "Miguel Molina3", "Robert Cluet3", "Manolete garcia perez3", "David bustamante3" }
+            });
+            return workshops;
+        }
+
         [HttpPost("[action]")]
         public async Task InvokeDeviceMethodAsync([FromBody] RandomItemRequest method)
         {
-            var rng = new Random();
-            await this.devicesProcessor.InvokeDeviceMethodAsync(method.DeviceId.FirstOrDefault(), method.Method);
+            foreach (var device in method.Devices)
+            {
+                var rng = new Random();
+                int index = rng.Next(method.Assistants.Count);
+                await this.devicesProcessor.InvokeDeviceMethodAsync(device, method.Method, new Payload { Name = method.Assistants[index] });
+            }
             
         }
     }

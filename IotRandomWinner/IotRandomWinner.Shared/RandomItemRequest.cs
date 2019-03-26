@@ -7,7 +7,8 @@ namespace IotRandomWinner.Shared
     public class RandomItemRequest
     {
         public string Method { get; set; }
-        public List<DeviceEntity> DeviceId { get; set; }
+        public DeviceEntity[] Devices { get; set; }
+        public List<string> Assistants { get; set; }
 
     }
 }

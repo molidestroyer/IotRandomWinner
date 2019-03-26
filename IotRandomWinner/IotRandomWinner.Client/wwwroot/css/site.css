@@ -21,16 +21,16 @@ app {
 }
 
     .main .top-row {
-        background-color: #e6e6e6;
+        background-color: #033778;
         border-bottom: 1px solid #d6d5d5;
     }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-image: linear-gradient(180deg,#033778 0%, white 70%);
 }
 
     .sidebar .top-row {
-        background-color: rgba(0,0,0,0.4);
+        background-color: #033778;
     }
 
     .sidebar .navbar-brand {
@@ -133,3 +133,31 @@ app {
         display: block;
     }
 }
+
+.product-device {
+    position: absolute;
+    right: 10%;
+    bottom: 0;
+    width: 100px;
+    height: 245px;
+    background-color: #333;
+    border-radius: 21px;
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+}
+
+    .product-device > img {
+        height: 381px;
+    }
+
+.product-device-2 {
+    top: -25%;
+    right: auto;
+    bottom: 0;
+    left: 5%;
+    background-color: #e5e5e5;
+}
+
+    .product-device-2 > img {
+        height: 381px;
+    }
