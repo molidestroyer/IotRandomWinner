@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using IotRandomWinner.Shared
-
+@using Newtonsoft.Json;
 @inject HttpClient Http
 
 @if (devices == null)
@@ -27,32 +27,39 @@ else
     <div class="row" style="padding-top:10px">
         <div class="col-md-4">
             <select class="form-control" onchange="@WorkshopClicked">
-                <option value="">-- Select Country --</option>
+                <option value="">-- Select workshop --</option>
                 @foreach (var workshop in workshopList)
                 {
-                    <option value="@workshop.Name">@workshop.Name</option>
+                    <option value="@workshop">@workshop</option>
                 }
             </select>
         </div>
     </div>
-
 }
 
 @functions {
-    DeviceEntity[] devices;
+    DeviceEntity[] devices = new DeviceEntity[0];
     string workshopName { get; set; }
-    WorkshopList[] workshopList;
+    IEnumerable< UserWorkshop> userWorkshops = new UserWorkshop[0];
+    string[] workshopList = new string[0];
 
     protected override async Task OnInitAsync()
     {
         devices = await Http.GetJsonAsync<DeviceEntity[]>("api/SampleData/GetDevices");
-        workshopList = await Http.GetJsonAsync<WorkshopList[]>("api/SampleData/GetWorkshops");
+        var userWorkshopsResponse = await Http.GetAsync("api/SampleData/GetWorkshops");
+        if(userWorkshopsResponse.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            var content = await userWorkshopsResponse.Content.ReadAsStringAsync();
+            userWorkshops = JsonConvert.DeserializeObject<IEnumerable<UserWorkshop>>(content);
+        }
+        workshopList = userWorkshops.Select(item => item.WorkshopName).Distinct().ToArray();
     }
 
     protected async Task CallRandomNumber()
     {
-        var request = new RandomItemRequest { Devices = devices , Method = "generateRandomNumber", Assistants= workshopList.FirstOrDefault(t=> t.Name == workshopName).Assitants };
+        var request = new RandomItemRequest { Devices = devices, Method = "generateRandomNumber", Assistants = userWorkshops.Where(t => t.WorkshopName == workshopName).Select(u => u.AssitantName).ToList() };
         await Http.PostJsonAsync<RandomItemRequest>("api/SampleData/InvokeDeviceMethod", request);
+
 
     }
 

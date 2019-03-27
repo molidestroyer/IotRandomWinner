@@ -131,3 +131,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+/IotRandomWinner/IotRandomWinner.Server/epd2.csv
+/IotRandomWinner/IotRandomWinner.Server/epd.csv
