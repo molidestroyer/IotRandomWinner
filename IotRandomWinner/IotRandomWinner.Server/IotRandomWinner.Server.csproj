@@ -11,13 +11,9 @@
 
   <ItemGroup>
     <None Remove="epd.csv" />
-    <None Remove="epd2.csv" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="epd2.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="epd.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

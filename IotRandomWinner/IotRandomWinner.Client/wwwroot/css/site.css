@@ -163,62 +163,37 @@ app {
     }
 
 
-.card-title{
-    font-weight:600;
-    font-size:25px;
+.card-title {
+    font-weight: 600;
+    font-size: 25px;
+
+    
 }
 
-.card-text {
+.card-text
+{
     font-weight: 400;
     font-size: 25px;
 }
 
-@include media-breakpoint-up(sm) {
-    html {
-        font-size: 1.2rem;
-    }
-
-    .card-title {
-        font-size: 10px;
-    }
-
-    .card-text {
-        font-size: 10px;
-    }
-
-    @include media-breakpoint-up(md) {
-        html {
-            font-size: 1.4rem;
-        }
-
-
-        .card-title {
-            font-size: 15px;
-        }
-
-        .card-text {
-            font-size: 15px;
-        }
-    }
-
-    @include media-breakpoint-up(lg) {
-        html {
-            font-size: 1.6rem;
-        }
-
-
-        .card-title {
-            font-size: 20px;
-        }
-
-        .card-text {
-            font-size: 20px;
-        }
-    }
-
-}
-
-
 .img-fluid {
     max-height: 200px;
+}
+
+@media (max-width: 575px) {
+    .card-title, .card-text {
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 991px) {
+    .card-title, .card-text {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 991px) {
+    .card-title, .card-text {
+        font-size: 20px;
+    }
 }

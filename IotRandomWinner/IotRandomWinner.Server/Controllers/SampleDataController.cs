@@ -2,6 +2,7 @@
 using IotRandomWinner.Server.iot;
 using IotRandomWinner.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,11 +24,11 @@ namespace IotRandomWinner.Server.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<DeviceEntity> GetDevices()
+        public IActionResult GetDevices()
         {
             var rng = new Random();
             var devices = this.devicesProcessor.GetDevices().Result;
-            return devices;
+            return Ok(JsonConvert.SerializeObject(devices.Where(t => t.ConnectionState == "Connected")));
         }
 
         [HttpGet("[action]")]
@@ -36,7 +37,7 @@ namespace IotRandomWinner.Server.Controllers
             TextReader reader = new StreamReader("epd.csv");
             var csvReader = new CsvReader(reader);
             var workshops = csvReader.GetRecords<UserWorkshop>();
-            return Ok(workshops);
+            return Ok(JsonConvert.SerializeObject(workshops));
         }
 
         [HttpPost("[action]")]

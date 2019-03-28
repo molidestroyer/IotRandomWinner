@@ -41,7 +41,7 @@ else
         </div>
 
         <div class="card col-3 offset-1 text-center">
-            <img class="img-fluid mx-auto d-block" src="https://fuzati.com/wp-content/uploads/2016/12/People-Icon.png" alt="Card image cap">
+            <img class="img-fluid mx-auto d-block" src="http://www.hobartpcgroup.org.au/wp-content/uploads/2016/03/people-icon.png" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">Assistants</h5>
                 <p class="card-text">@userWorkshops.Where(t => t.WorkshopName == workshopName).Count()</p>
@@ -57,38 +57,38 @@ else
         </div>
 
     </div>
-    <div class="row justify-content-md-center pb-3">
+    <div class="row justify-content-md-center pb-3 text-center">
         <h1>Better ask ERNI .Net community ... </h1>
     </div>
-        }
+}
 
-        @functions {
-            DeviceEntity[] devices = new DeviceEntity[0];
-            string workshopName { get; set; }
-            IEnumerable<UserWorkshop> userWorkshops = new UserWorkshop[0];
-            string[] workshopList = new string[0];
+@functions {
+    DeviceEntity[] devices = new DeviceEntity[0];
+    string workshopName { get; set; }
+    IEnumerable<UserWorkshop> userWorkshops = new UserWorkshop[0];
+    string[] workshopList = new string[0];
 
     protected override async Task OnInitAsync()
+    {
+        devices = await Http.GetJsonAsync<DeviceEntity[]>("api/SampleData/GetDevices");
+        var userWorkshopsResponse = await Http.GetAsync("api/SampleData/GetWorkshops");
+        if (userWorkshopsResponse.StatusCode == System.Net.HttpStatusCode.OK)
         {
-            devices = await Http.GetJsonAsync<DeviceEntity[]>("api/SampleData/GetDevices");
-            var userWorkshopsResponse = await Http.GetAsync("api/SampleData/GetWorkshops");
-            if (userWorkshopsResponse.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var content = await userWorkshopsResponse.Content.ReadAsStringAsync();
-                userWorkshops = JsonConvert.DeserializeObject<IEnumerable<UserWorkshop>>(content);
-            }
-            workshopList = userWorkshops.Select(item => item.WorkshopName).Distinct().ToArray();
+            var content = await userWorkshopsResponse.Content.ReadAsStringAsync();
+            userWorkshops = JsonConvert.DeserializeObject<IEnumerable<UserWorkshop>>(content);
         }
+        workshopList = userWorkshops.Select(item => item.WorkshopName).Distinct().ToArray();
+    }
 
-        protected async Task CallRandomNumber()
-        {
-            var request = new RandomItemRequest { Devices = devices, Method = "showWinner", Assistants = userWorkshops.Where(t => t.WorkshopName == workshopName).Select(u => u.AssitantName).ToList() };
-            await Http.PostJsonAsync<RandomItemRequest>("api/SampleData/InvokeDeviceMethod", request);
-        }
+    protected async Task CallRandomNumber()
+    {
+        var request = new RandomItemRequest { Devices = devices, Method = "showWinner", Assistants = userWorkshops.Where(t => t.WorkshopName == workshopName).Select(u => u.AssitantName).ToList() };
+        await Http.PostJsonAsync<RandomItemRequest>("api/SampleData/InvokeDeviceMethod", request);
+    }
 
-        void WorkshopClicked(UIChangeEventArgs cityEvent)
-        {
-            workshopName = cityEvent.Value.ToString();
-            this.StateHasChanged();
-        }
-        }
+    void WorkshopClicked(UIChangeEventArgs cityEvent)
+    {
+        workshopName = cityEvent.Value.ToString();
+        this.StateHasChanged();
+    }
+}
