@@ -48,7 +48,6 @@ namespace IotRandomWinner.Server.Controllers
                 int index = rng.Next(method.Assistants.Count);
                 await this.devicesProcessor.InvokeDeviceMethodAsync(device, method.Method, new Payload { Name = method.Assistants[index] });
             }
-            
         }
     }
 }

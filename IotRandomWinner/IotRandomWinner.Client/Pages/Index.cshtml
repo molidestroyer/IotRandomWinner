@@ -10,11 +10,11 @@
 }
 else
 {
-    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light" style="z-index: -1">
         <div class="col-md-5 p-lg-5 mx-auto my-5">
             <h1 class="display-4 font-weight-normal">ERNI EPD DRAW</h1>
             <p class="lead font-weight-normal">Let's have some fun on the EPD giving to the assistants some prices randomly using the power of the cloud combined with IOT.</p>
-            <button class="btn btn-outline-secondary" onclick="@(async () => await CallRandomNumber())">Send winners to devices</button>
+            <button class="btn btn-outline-secondary" disabled="@string.IsNullOrEmpty(workshopName)" onclick="@(async () => await CallRandomNumber())">Send winners to devices</button>
         </div>
         <div class="product-device shadow-sm d-none d-md-block">
             <img src="https://i.pinimg.com/564x/16/12/18/161218e3e1795507f9e93825f111fff0.jpg" />
@@ -23,49 +23,74 @@ else
             <img src="https://i.pinimg.com/564x/16/12/18/161218e3e1795507f9e93825f111fff0.jpg" />
         </div>
     </div>
-
-    <div class="row" style="padding-top:10px">
-        <div class="col-md-4">
-            <select class="form-control" onchange="@WorkshopClicked">
-                <option value="">-- Select workshop --</option>
-                @foreach (var workshop in workshopList)
-                {
-                    <option value="@workshop">@workshop</option>
-                }
-            </select>
+    <div class="row justify-content-md-center pb-3">
+        <div class="card col-3 text-center">
+            <img class="img-fluid mx-auto d-block" src="http://www.esomarfoundation.org/wp-content/uploads/2016/08/86746906453-300x231.jpg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Select workshop</h5>
+                <div class="row" style="padding-top:10px">
+                    <select class="form-control" onchange="@WorkshopClicked">
+                        <option value="">-- Select workshop --</option>
+                        @foreach (var workshop in workshopList)
+                        {
+                            <option value="@workshop">@workshop</option>
+                        }
+                    </select>
+                </div>
+            </div>
         </div>
-    </div>
-}
 
-@functions {
-    DeviceEntity[] devices = new DeviceEntity[0];
-    string workshopName { get; set; }
-    IEnumerable< UserWorkshop> userWorkshops = new UserWorkshop[0];
-    string[] workshopList = new string[0];
+        <div class="card col-3 offset-1 text-center">
+            <img class="img-fluid mx-auto d-block" src="https://fuzati.com/wp-content/uploads/2016/12/People-Icon.png" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Assistants</h5>
+                <p class="card-text">@userWorkshops.Where(t => t.WorkshopName == workshopName).Count()</p>
+            </div>
+        </div>
+
+        <div class="card col-3 offset-1 text-center">
+            <img class="img-fluid mx-auto d-block" src="https://i.pinimg.com/564x/16/12/18/161218e3e1795507f9e93825f111fff0.jpg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Connected devices</h5>
+                <p class="card-text">@devices.Count()</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="row justify-content-md-center pb-3">
+        <h1>Better ask ERNI .Net community ... </h1>
+    </div>
+        }
+
+        @functions {
+            DeviceEntity[] devices = new DeviceEntity[0];
+            string workshopName { get; set; }
+            IEnumerable<UserWorkshop> userWorkshops = new UserWorkshop[0];
+            string[] workshopList = new string[0];
 
     protected override async Task OnInitAsync()
-    {
-        devices = await Http.GetJsonAsync<DeviceEntity[]>("api/SampleData/GetDevices");
-        var userWorkshopsResponse = await Http.GetAsync("api/SampleData/GetWorkshops");
-        if(userWorkshopsResponse.StatusCode == System.Net.HttpStatusCode.OK)
         {
-            var content = await userWorkshopsResponse.Content.ReadAsStringAsync();
-            userWorkshops = JsonConvert.DeserializeObject<IEnumerable<UserWorkshop>>(content);
+            devices = await Http.GetJsonAsync<DeviceEntity[]>("api/SampleData/GetDevices");
+            var userWorkshopsResponse = await Http.GetAsync("api/SampleData/GetWorkshops");
+            if (userWorkshopsResponse.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await userWorkshopsResponse.Content.ReadAsStringAsync();
+                userWorkshops = JsonConvert.DeserializeObject<IEnumerable<UserWorkshop>>(content);
+            }
+            workshopList = userWorkshops.Select(item => item.WorkshopName).Distinct().ToArray();
         }
-        workshopList = userWorkshops.Select(item => item.WorkshopName).Distinct().ToArray();
-    }
 
-    protected async Task CallRandomNumber()
-    {
-        var request = new RandomItemRequest { Devices = devices, Method = "generateRandomNumber", Assistants = userWorkshops.Where(t => t.WorkshopName == workshopName).Select(u => u.AssitantName).ToList() };
-        await Http.PostJsonAsync<RandomItemRequest>("api/SampleData/InvokeDeviceMethod", request);
+        protected async Task CallRandomNumber()
+        {
+            var request = new RandomItemRequest { Devices = devices, Method = "generateRandomNumber", Assistants = userWorkshops.Where(t => t.WorkshopName == workshopName).Select(u => u.AssitantName).ToList() };
+            await Http.PostJsonAsync<RandomItemRequest>("api/SampleData/InvokeDeviceMethod", request);
 
 
-    }
+        }
 
-    void WorkshopClicked(UIChangeEventArgs cityEvent)
-    {
-        workshopName = cityEvent.Value.ToString();
-        this.StateHasChanged();
-    }
-}
+        void WorkshopClicked(UIChangeEventArgs cityEvent)
+        {
+            workshopName = cityEvent.Value.ToString();
+            this.StateHasChanged();
+        }
+        }

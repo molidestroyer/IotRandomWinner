@@ -1,7 +1,7 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: "Source Sans Pro", sans-serif;
 }
 
 app {
@@ -161,3 +161,64 @@ app {
     .product-device-2 > img {
         height: 381px;
     }
+
+
+.card-title{
+    font-weight:600;
+    font-size:25px;
+}
+
+.card-text {
+    font-weight: 400;
+    font-size: 25px;
+}
+
+@include media-breakpoint-up(sm) {
+    html {
+        font-size: 1.2rem;
+    }
+
+    .card-title {
+        font-size: 10px;
+    }
+
+    .card-text {
+        font-size: 10px;
+    }
+
+    @include media-breakpoint-up(md) {
+        html {
+            font-size: 1.4rem;
+        }
+
+
+        .card-title {
+            font-size: 15px;
+        }
+
+        .card-text {
+            font-size: 15px;
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        html {
+            font-size: 1.6rem;
+        }
+
+
+        .card-title {
+            font-size: 20px;
+        }
+
+        .card-text {
+            font-size: 20px;
+        }
+    }
+
+}
+
+
+.img-fluid {
+    max-height: 200px;
+}
