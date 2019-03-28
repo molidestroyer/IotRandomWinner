@@ -11,19 +11,23 @@
 
 static bool hasWifi = false;
 static bool hasWinner = false;
+int RED_LED = 20;
+int GREEN_LED = 19;
+int BLUE_LED = 39;
 
-static void generateRandomNumber(JsonObject &payloadBuffer)
+static void showWinner(JsonObject &payloadBuffer)
 {
   //generate a random number
   int randomNumber = random(1, 50);
 
   //display the random number on the serial monitor
-  Screen.print(1, "Congratulations!  ", true);
+  Screen.print(1, "CONGRATULATIONS!  ", true);
   delay(1000);
 
   const char *yourstring = payloadBuffer["Name"];
-  Screen.print(1, yourstring);
-  Screen.print(3, "Enjoy!");
+  Screen.print(1, yourstring, true);
+
+  hasWinner = true;
 }
 
 static JsonObject &parsePayload(const unsigned char *payload)
@@ -61,12 +65,12 @@ static int DeviceMethodCallback(const char *methodName, const unsigned char *pay
 
   LogInfo("received device method call\n\n");
 
-  if (strcmp(methodName, "generateRandomNumber") == 0)
+  if (strcmp(methodName, "showWinner") == 0)
   {
     JsonObject &payloadBuffer = parsePayload(payload);
     if (payloadBuffer.size())
     {
-      generateRandomNumber(payloadBuffer);
+      showWinner(payloadBuffer);
     }
   }
   else
@@ -96,12 +100,43 @@ void setup()
   DevKitMQTTClient_Init(true);
   DevKitMQTTClient_SetDeviceMethodCallback(DeviceMethodCallback);
 
-  Screen.print(0, "And the winner is...");
+  Screen.print(0, "THE WINNER IS...");
   Screen.print(3, "waiting...");
+
+  // initialize the pins as digital output.
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(BLUE_LED, OUTPUT);
+}
+
+void ledParty()
+{
+  // turn red LED on
+  digitalWrite(RED_LED, HIGH);
+  delay(500);
+  // turn red LED off
+  digitalWrite(RED_LED, LOW);
+  delay(200);
+  // turn green LED on
+  digitalWrite(GREEN_LED, HIGH);
+  delay(500);
+  // turn green LED off
+  digitalWrite(GREEN_LED, LOW);
+  delay(200);
+  // turn blue LED on
+  digitalWrite(BLUE_LED, HIGH);
+  delay(500);
+  // turn blue LED off
+  digitalWrite(BLUE_LED, LOW);
+  delay(200);
 }
 
 void loop()
 {
   DevKitMQTTClient_Check();
-  delay(66);
+
+  if (hasWinner)
+  {
+    ledParty();
+  }
 }
