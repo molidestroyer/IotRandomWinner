@@ -163,11 +163,14 @@ app {
     }
 
 
+.card {
+    border-color: #033778;
+}
+
 .card-title {
     font-weight: 600;
     font-size: 25px;
-
-    
+    color: #033778;
 }
 
 .card-text
@@ -182,18 +185,18 @@ app {
 
 @media (max-width: 575px) {
     .card-title, .card-text {
-        font-size: 10px;
+        font-size: 15px;
     }
 }
 
 @media (min-width: 576px) and (max-width: 991px) {
     .card-title, .card-text {
-        font-size: 15px;
+        font-size: 20px;
     }
 }
 
 @media (min-width: 991px) {
     .card-title, .card-text {
-        font-size: 20px;
+        font-size: 25px;
     }
 }
